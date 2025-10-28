@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<h4 class="mb-4 text-success">Monitoramento do Sistema</h4>
+
+<div class="row g-3">
+  {% for item in ['CPU', 'RAM', 'Temperatura', 'GPU', 'Rede', 'Disco'] %}
+  <div class="col-md-4">
+    <div class="card p-3 text-center">
+      <div class="card-title">{{ item }}</div>
+      <div class="data-value" id="{{ item.lower() }}-value">--</div>
+      <canvas id="{{ item.lower() }}-chart" height="100"></canvas>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const metrics = ['cpu','ram','temperatura','gpu','rede','disco'];
+
+metrics.forEach(metric => {
+  const ctx = document.getElementById(`${metric}-chart`);
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: metric.toUpperCase(),
+        data: [],
+        borderColor: '#00ff88',
+        borderWidth: 2,
+        tension: 0.3
+      }]
+    },
+    options: {
+      scales: { x: { display: false }, y: { ticks: { color: '#aaa' } } },
+      plugins: { legend: { display: false } },
+      elements: { point: { radius: 0 } }
+    }
+  });
+});
+</script>
+{% endblock %}
