@@ -1,0 +1,43 @@
+#!/usr/bin/env python3
+"""
+Launcher do Painel Flask em fullscreen via PyWebView
+"""
+import webview
+import threading
+import subprocess
+import time
+import socket
+
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+    except:
+        ip = "127.0.0.1"
+    s.close()
+    return ip
+
+def start_flask():
+    subprocess.Popen(["python3", "/opt/projeto03/app/app.py"])
+
+def main():
+    # Inicia o Flask em segundo plano
+    threading.Thread(target=start_flask, daemon=True).start()
+
+    # Aguarda o servidor Flask subir
+    time.sleep(3)
+
+    ip = get_ip()
+    url = f"http://{ip}:5000"
+    print(f"🌐 Abrindo painel em {url}")
+
+    # Abre o painel em tela cheia
+    webview.create_window(
+        title="Painel Samba Jetson",
+        url=url,
+        fullscreen=True,
+        confirm_close=False,
+        easy_drag=False
+    )
+    webvi

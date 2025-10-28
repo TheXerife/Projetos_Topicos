@@ -1,0 +1,11 @@
+[Unit]
+Description=USB Auto-Mount and Samba Share Watcher
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/local/bin/usb_watcher.py
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
